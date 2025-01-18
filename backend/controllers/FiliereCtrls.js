@@ -58,19 +58,32 @@ exports.getFiliereById = async (req, res) => {
 };
 
 
+// Controller function to create a new Filiere
 exports.createFiliere = async (req, res) => {
     try {
-        const filiere = new Filiere({
-            ...req.body
-        });
-
-        await filiere.save();
-
-        res.status(201).json({ success: true, filiere });
+      const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
+  
+      // Create a new Filiere document
+      const newFiliere = new Filiere({
+        nomFiliere,
+        descriptionFiliere,
+        shortNom,
+        typeFiliere,
+        professeurs,
+        semestres,
+        coordinateur,
+        elements
+      });
+  
+      // Save the Filiere to the database
+      await newFiliere.save();
+  
+      res.status(201).json({ message: 'Filiere created successfully', data: newFiliere });
     } catch (error) {
-        res.status(500).json({ success: false, error: error.message, tes: 'hhh' });
+      console.error('Error creating Filiere:', error);
+      res.status(500).json({ message: 'Server error', error: error.message });
     }
-}
+  };
 
 exports.updateFiliere = async (req, res) => {
     try {

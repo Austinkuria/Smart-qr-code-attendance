@@ -50,7 +50,7 @@ const UpdatePassword = () => {
         }
       }
 
-      // Redirect based on user role
+      // Redirect based on user role or to home page
       navigate('/');
     } catch (error) {
       console.error('Update Password Error:', error);
