@@ -1,9 +1,6 @@
 const User = require('../models/Users');
-
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { use } = require('../routes/ProfesseursRts');
-
 
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
@@ -14,7 +11,6 @@ exports.login = (req, res, next) => {
 
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
-
           if (!valid) {
             return res.status(401).json({ error: 'Paire login/mot de passe incorrecte' });
           }
@@ -38,7 +34,6 @@ exports.login = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-
 exports.updatePassword = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -51,9 +46,6 @@ exports.updatePassword = async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
-    // Verify the current password
-
 
     // Hash the new password
     const salt = await bcrypt.genSalt(10);
@@ -74,13 +66,40 @@ exports.updatePassword = async (req, res) => {
         'RANDOM_TOKEN_SECRET',
         { expiresIn: '24h' }
       ),
-      userRole: user.role,nom:user.nom
+      userRole: user.role,
+      nom: user.nom
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+exports.createUser = async (req, res) => {
+  try {
+    const { nom, prenom, email, password, role, profile } = req.body;
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create a new user with the hashed password
+    const user = new User({
+      nom,
+      prenom,
+      email,
+      password: hashedPassword,
+      role,
+      profile,
+      isFirstLogin: true, // Set as true for new users
+    });
+
+    await user.save();
+    res.status(201).json({ message: 'User created successfully', user });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
 exports.getUserNameById = async (req, res) => {
   try {
     const { userId } = req.params;
@@ -104,6 +123,7 @@ exports.getUserNameById = async (req, res) => {
     return res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 exports.getUserById = async (req, res) => {
   const { userId } = req.params;
 
@@ -123,6 +143,6 @@ exports.getAllUsers = async (req, res) => {
     const users = await User.find();
     res.status(200).json(users);
   } catch (error) {
-    res.status(500).json({ message: 'Error hhhh fetching users', error });
+    res.status(500).json({ message: 'Error fetching users', error });
   }
 };

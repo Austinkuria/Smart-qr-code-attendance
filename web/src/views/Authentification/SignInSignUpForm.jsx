@@ -24,6 +24,9 @@ const SignInSignUpForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+      // Log the values of email and password to verify what's being sent
+  console.log('Email:', emailValue);
+  console.log('Password:', passwordValue)
     try {
       const response = await fetch('http://localhost:3001/api1/v1/auth/login', {
         method: 'POST',
