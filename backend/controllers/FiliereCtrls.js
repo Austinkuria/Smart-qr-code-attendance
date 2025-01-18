@@ -1,24 +1,54 @@
 const mongoose = require('mongoose');
 const Filiere = require('../models/Filieres');
 const Professeur = require('../models/Professeurs');
+
 exports.getAllFiliere = async (req, res) => {
     try {
-        const filiereList = await Filiere.find().populate({
-            path: 'elements',
-            select: 'libelleElement'
-        })
-        
-   
+        const filiereList = await Filiere.find().populate('elements', 'libelleElement');
+
         if (!filiereList || filiereList.length === 0) {
             return res.status(404).json({ success: false, message: 'No filieres found' });
         }
-        
+
         res.status(200).json({ success: true, filiereList });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
-}
+};
 
+exports.createFiliere = async (req, res) => {
+    try {
+        const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
+
+        // Validate ObjectIds
+        const allIds = [...professeurs, ...semestres, coordinateur, ...elements];
+        const invalidIds = allIds.filter(id => !mongoose.Types.ObjectId.isValid(id));
+
+        if (invalidIds.length > 0) {
+            return res.status(400).json({ message: 'Invalid ObjectId(s): ' + invalidIds.join(', ') });
+        }
+
+        // Create a new Filiere document
+        const newFiliere = new Filiere({
+            nomFiliere,
+            descriptionFiliere,
+            shortNom,
+            typeFiliere,
+            professeurs,
+            semestres,
+            coordinateur,
+            elements
+        });
+
+        // Save the Filiere to the database
+        await newFiliere.save();
+
+        res.status(201).json({ message: 'Filiere created successfully', data: newFiliere });
+    } catch (error) {
+        console.error('Error creating Filiere:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+};
 
 
 exports.getFiliere = async (req, res) => {
@@ -59,31 +89,40 @@ exports.getFiliereById = async (req, res) => {
 
 
 // Controller function to create a new Filiere
+
 exports.createFiliere = async (req, res) => {
     try {
-      const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
-  
-      // Create a new Filiere document
-      const newFiliere = new Filiere({
-        nomFiliere,
-        descriptionFiliere,
-        shortNom,
-        typeFiliere,
-        professeurs,
-        semestres,
-        coordinateur,
-        elements
-      });
-  
-      // Save the Filiere to the database
-      await newFiliere.save();
-  
-      res.status(201).json({ message: 'Filiere created successfully', data: newFiliere });
+        const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
+
+        // Validate ObjectIds
+        const allIds = [...professeurs, ...semestres, coordinateur, ...elements];
+        const invalidIds = allIds.filter(id => !mongoose.Types.ObjectId.isValid(id));
+
+        if (invalidIds.length > 0) {
+            return res.status(400).json({ message: 'Invalid ObjectId(s): ' + invalidIds.join(', ') });
+        }
+
+        // Create a new Filiere document
+        const newFiliere = new Filiere({
+            nomFiliere,
+            descriptionFiliere,
+            shortNom,
+            typeFiliere,
+            professeurs,
+            semestres,
+            coordinateur,
+            elements
+        });
+
+        // Save the Filiere to the database
+        await newFiliere.save();
+
+        res.status(201).json({ message: 'Filiere created successfully', data: newFiliere });
     } catch (error) {
-      console.error('Error creating Filiere:', error);
-      res.status(500).json({ message: 'Server error', error: error.message });
+        console.error('Error creating Filiere:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
-  };
+};
 
 exports.updateFiliere = async (req, res) => {
     try {
