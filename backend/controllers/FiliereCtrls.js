@@ -1,7 +1,8 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); 
 const Filiere = require('../models/Filieres');
 const Professeur = require('../models/Professeurs');
 
+// Get all filieres
 exports.getAllFiliere = async (req, res) => {
     try {
         const filiereList = await Filiere.find().populate('elements', 'libelleElement');
@@ -16,6 +17,7 @@ exports.getAllFiliere = async (req, res) => {
     }
 };
 
+// Create a new Filiere
 exports.createFiliere = async (req, res) => {
     try {
         const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
@@ -50,7 +52,7 @@ exports.createFiliere = async (req, res) => {
     }
 };
 
-
+// Get a Filiere by name
 exports.getFiliere = async (req, res) => {
     try {
         const filiereInstance = await Filiere.findOne({ nomFiliere: req.params.name })
@@ -69,6 +71,7 @@ exports.getFiliere = async (req, res) => {
     }
 };
 
+// Get Filiere by ID
 exports.getFiliereById = async (req, res) => {
     try {
         const filiereInstance = await Filiere.findById(req.params.id)
@@ -87,43 +90,7 @@ exports.getFiliereById = async (req, res) => {
     }
 };
 
-
-// Controller function to create a new Filiere
-
-exports.createFiliere = async (req, res) => {
-    try {
-        const { nomFiliere, descriptionFiliere, shortNom, typeFiliere, professeurs, semestres, coordinateur, elements } = req.body;
-
-        // Validate ObjectIds
-        const allIds = [...professeurs, ...semestres, coordinateur, ...elements];
-        const invalidIds = allIds.filter(id => !mongoose.Types.ObjectId.isValid(id));
-
-        if (invalidIds.length > 0) {
-            return res.status(400).json({ message: 'Invalid ObjectId(s): ' + invalidIds.join(', ') });
-        }
-
-        // Create a new Filiere document
-        const newFiliere = new Filiere({
-            nomFiliere,
-            descriptionFiliere,
-            shortNom,
-            typeFiliere,
-            professeurs,
-            semestres,
-            coordinateur,
-            elements
-        });
-
-        // Save the Filiere to the database
-        await newFiliere.save();
-
-        res.status(201).json({ message: 'Filiere created successfully', data: newFiliere });
-    } catch (error) {
-        console.error('Error creating Filiere:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
-    }
-};
-
+// Update a Filiere
 exports.updateFiliere = async (req, res) => {
     try {
         if (!mongoose.isValidObjectId(req.params.id)) {
@@ -131,26 +98,29 @@ exports.updateFiliere = async (req, res) => {
         }
 
         if(req.body.coordinateur){
-        const cord = await Professeur.findById(req.body.coordinateur);
-        if (!cord) {
-            return res.status(400).json({ success: false, message: 'Invalid coordinateur' });
-        }}
+            const cord = await Professeur.findById(req.body.coordinateur);
+            if (!cord) {
+                return res.status(400).json({ success: false, message: 'Invalid coordinateur' });
+            }
+        }
 
         if(req.body.professeurs){
-        for (const prof of req.body.professeurs) {
-            const profess = await Professeur.findById(prof);
-            if (!profess) {
-                return res.status(400).json({ success: false, message: `${prof} is an invalid professor` });
+            for (const prof of req.body.professeurs) {
+                const profess = await Professeur.findById(prof);
+                if (!profess) {
+                    return res.status(400).json({ success: false, message: `${prof} is an invalid professor` });
+                }
             }
-        }}
+        }
 
         if(req.body.modules){
-        for (const mod of req.body.modules) {
-            const modul = await Module.findById(mod);
-            if (!modul) {
-                return res.status(400).json({ success: false, message: `${mod} is an invalid module` });
+            for (const mod of req.body.modules) {
+                const modul = await Module.findById(mod);
+                if (!modul) {
+                    return res.status(400).json({ success: false, message: `${mod} is an invalid module` });
+                }
             }
-        }}
+        }
 
         const updatedFiliere = await Filiere.findByIdAndUpdate(req.params.id, {
             nomFiliere: req.body.nomFiliere,
@@ -164,8 +134,9 @@ exports.updateFiliere = async (req, res) => {
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
-}
+};
 
+// Delete a Filiere
 exports.deleteFiliere = async (req, res) => {
     try {
         const deletedFiliere = await Filiere.findByIdAndDelete(req.params.id);
@@ -177,9 +148,9 @@ exports.deleteFiliere = async (req, res) => {
     } catch (error) {
         return res.status(500).json({ success: false, error: error});
     }
-}
+};
 
-
+// The following section is commented out but kept for reference
 /*
 exports.countFilieres = async (req, res) => {
     try {
@@ -201,3 +172,4 @@ exports.countFilieres = async (req, res) => {
     }
 };
 */
+

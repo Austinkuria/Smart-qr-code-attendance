@@ -5,8 +5,19 @@ const Semestre = require('../models/Semestres')
 
 exports.createStudent = async (req, res) => {
     try {
-        const { nom, prenom, cne, cin,email,  issueDe, telephone, redoublant, lieuDeNaissance, adresse, filieres,semestre } = req.body;
+        const { nom, prenom, cne, cin, email, issueDe, telephone, filieres, semestre } = req.body;
 
+        // Validate required fields
+        if (!nom || !prenom || !cne || !cin || !issueDe || !filieres || !semestre) {
+            return res.status(400).json({ success: false, message: 'All fields are required' });
+        }
+
+        // Check if semestre is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(semestre)) {
+            return res.status(400).json({ success: false, message: 'Invalid semestre ID' });
+        }
+
+        // Create student instance
         const student = new Students({
             nom,
             prenom,
@@ -15,23 +26,19 @@ exports.createStudent = async (req, res) => {
             email,
             issueDe,
             telephone,
-            redoublant,
-            lieuDeNaissance,
-            adresse,
             filieres,
-            semestre// Initializing as an empty array to align with the model
+            semestre
         });
 
-        const createdStudent = await student.save();
+        // Save the student to the database
+        await student.save();
 
-        await createdStudent.save();
-
-        res.status(201).json({ success: true, message: "Student created" });
+        res.status(201).json({ success: true, message: "Student created successfully" });
     } catch (error) {
         console.error("Error:", error);
-        res.status(400).json({ success: false, error });
+        res.status(500).json({ success: false, error: error.message });
     }
-}
+};
 
 exports.getAllStudents = (req, res) => {
     Students.find()
