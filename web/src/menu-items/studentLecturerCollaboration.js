@@ -12,8 +12,8 @@ const icons = {
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
 const studentLecturerCollaboration = {
-  id: 'Student-Lecturer Information',
-  title: 'Student and Lecturer Information',
+  id: 'Student-Lecturer Details',
+  title: 'Student and Lecturer Details',
   type: 'group',
   children: [
     {

@@ -6,6 +6,8 @@ import { Avatar, Box, Grid, Typography } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import SkeletonTotalOrderCard from 'ui-component/cards/Skeleton/EarningCard';
 import StudentIcon from 'assets/images/icons/student.svg';
+
+// Custom blue palette
 const blue = {
   50: '#e3f2fd',
   100: '#bbdefb',
@@ -19,14 +21,15 @@ const blue = {
   900: '#225579',
 };
 
+// Styled card wrapper
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: blue[800],
   color: '#fff',
   overflow: 'hidden',
   position: 'relative',
-  '&>div': {
+  '& > div': {
     position: 'relative',
-    zIndex: 5
+    zIndex: 5,
   },
   '&:after': {
     content: '""',
@@ -40,8 +43,8 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     right: -95,
     [theme.breakpoints.down('sm')]: {
       top: -105,
-      right: -140
-    }
+      right: -140,
+    },
   },
   '&:before': {
     content: '""',
@@ -56,14 +59,16 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     opacity: 0.5,
     [theme.breakpoints.down('sm')]: {
       top: -155,
-      right: -70
-    }
-  }
+      right: -70,
+    },
+  },
 }));
 
+// Main component
 const TotalOrderLineChartCard = ({ isLoading }) => {
   const theme = useTheme();
   const [totalStudents, setTotalStudents] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchTotalStudents = async () => {
@@ -72,17 +77,19 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
 
         const response = await fetch('http://localhost:3001/api1/v1/students/count', {
           headers: {
-            'Authorization': `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         });
+
         if (response.ok) {
           const data = await response.json();
           setTotalStudents(data.count);
         } else {
           throw new Error('Failed to fetch total students count');
         }
-      } catch (error) {
-        console.error('Error:', error);
+      } catch (err) {
+        console.error('Error:', err);
+        setError('Unable to fetch data');
       }
     };
 
@@ -99,18 +106,18 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
             <Grid container direction="column">
               <Grid item>
                 <Grid container justifyContent="space-between">
-                <Grid item>
-                   <Avatar
+                  <Grid item>
+                    <Avatar
                       variant="rounded"
                       sx={{
                         ...theme.typography.commonAvatar,
                         ...theme.typography.largeAvatar,
                         backgroundColor: blue[800],
                         mt: 1,
-                        width: '80px' // Adjust the height for zooming
+                        width: '80px', // Adjust avatar size
                       }}
                     >
-                      <img src={StudentIcon} alt="Notification" />
+                      <img src={StudentIcon} alt="Student Icon" />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -118,8 +125,16 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                      {totalStudents !== null ? totalStudents : 'Loading...'}
+                    <Typography
+                      sx={{
+                        fontSize: '2.125rem',
+                        fontWeight: 500,
+                        mr: 1,
+                        mt: 1.75,
+                        mb: 0.75,
+                      }}
+                    >
+                      {error ? error : totalStudents !== null ? totalStudents : 'Loading...'}
                     </Typography>
                   </Grid>
                 </Grid>
@@ -129,10 +144,10 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                   sx={{
                     fontSize: '1rem',
                     fontWeight: 500,
-                    color: 'white'
+                    color: 'white',
                   }}
                 >
-                  Total students
+                  Total Students
                 </Typography>
               </Grid>
             </Grid>
@@ -144,7 +159,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
 };
 
 TotalOrderLineChartCard.propTypes = {
-  isLoading: PropTypes.bool
+  isLoading: PropTypes.bool,
 };
 
 export default TotalOrderLineChartCard;

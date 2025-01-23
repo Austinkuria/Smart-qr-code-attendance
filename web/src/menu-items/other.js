@@ -12,7 +12,7 @@ const other = {
   children: [
     {
       id: 'Contact',
-      title: 'Contact Administartion',
+      title: 'Administration Contacts',
       type: 'item',
       url: '/admin/Contact',
       icon: icons.IconPhone,
@@ -23,8 +23,7 @@ const other = {
       title: 'About Us',
       type: 'item',
       url: '/admin/About',
-      icon: icons.IconHelp,
-     
+      icon: icons.IconHelp
     }
   ]
 };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import Chart from 'react-apexcharts'; // Import the ApexCharts component
 
@@ -11,7 +11,7 @@ const predefinedNames = [
   'Transfer Students'
 ];
 
-const ChartComponent = () => {
+const ChartData = () => {
   const [error, setError] = useState(null);
   const [chartData, setChartData] = useState({
     height: 480,
@@ -84,8 +84,8 @@ const ChartComponent = () => {
     }))
   });
 
-  // Fetch data from API and update chartData
-  const fetchDataAndUpdateChart = async () => {
+  // Use useCallback to memoize the function
+  const fetchDataAndUpdateChart = useCallback(async () => {
     try {
       const response = await axios.get('http://localhost:3001/api1/v1/liste/absencesByFiliereBySem/1');
       const data = response.data;
@@ -110,11 +110,11 @@ const ChartComponent = () => {
       console.error('Error fetching data:', error);
       setError('An error occurred while fetching the data. Please try again later.');
     }
-  };
+  }, [chartData.series]); // Add chartData.series as a dependency
 
   useEffect(() => {
     fetchDataAndUpdateChart();
-  }, []);
+  }, [fetchDataAndUpdateChart]); // Add fetchDataAndUpdateChart as a dependency
 
   return (
     <div>
@@ -124,4 +124,4 @@ const ChartComponent = () => {
   );
 };
 
-export default ChartComponent;
+export default ChartData;

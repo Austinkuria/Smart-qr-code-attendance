@@ -7,32 +7,33 @@ import PerIcon from 'assets/images/icons/perLight.svg';
 import { useState, useEffect } from 'react';
 
 const lightBlue = {
-  50: '#274a8d', // Light blue shade
-  100: '#223f79', // Original light blue shade
-  200: '#64B5F6', // Original light blue shade
+  50: '#274a8d',
+  100: '#223f79',
+  200: '#64B5F6'
 };
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: lightBlue[50], // Lightest shade of blue
+  backgroundColor: lightBlue[50],
   overflow: 'hidden',
   position: 'relative',
   '&>div': {
     position: 'relative',
-    zIndex: 5,
+    zIndex: 5
   },
   '&:after': {
     content: '""',
     position: 'absolute',
     width: 210,
     height: 210,
-    backgroundColor: lightBlue[100], // Original light blue shade
+    backgroundColor: lightBlue[100],
     borderRadius: '50%',
     zIndex: 1,
     top: -85,
     right: -95,
     [theme.breakpoints.down('sm')]: {
       top: -105,
-      right: -140,
-    },
+      right: -140
+    }
   },
   '&:before': {
     content: '""',
@@ -40,21 +41,22 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     zIndex: 1,
     width: 210,
     height: 210,
-    backgroundColor: lightBlue[100], // Original light blue shade
+    backgroundColor: lightBlue[100],
     borderRadius: '50%',
     top: -125,
     right: -15,
     opacity: 0.5,
     [theme.breakpoints.down('sm')]: {
       top: -155,
-      right: -70,
-    },
-  },
+      right: -70
+    }
+  }
 }));
 
 const TotalOrderLineChartCard = ({ isLoading }) => {
   const theme = useTheme();
   const [attend, setAttend] = useState(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfessorsCount = async () => {
@@ -63,23 +65,26 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
 
         const response = await fetch('http://localhost:3001/api1/v1/liste/absence-percentage', {
           headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         });
+
         if (response.ok) {
           const data = await response.json();
           setAttend(data.absencePercentage);
         } else {
-          console.error('Failed to fetch professors count');
+          const errorMsg = `Failed to fetch data. Status: ${response.status}`;
+          console.error(errorMsg);
+          setError('Unable to load absenteeism rate. Please try again later.');
         }
       } catch (error) {
         console.error('Error:', error);
+        setError('An unexpected error occurred. Please check your connection and try again.');
       }
     };
 
     fetchProfessorsCount();
-  }, []); // Run once on component mount
-
+  }, []);
 
   return (
     <>
@@ -97,12 +102,12 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                       sx={{
                         ...theme.typography.commonAvatar,
                         ...theme.typography.largeAvatar,
-                        backgroundColor: lightBlue[50], // Lightest shade of blue
+                        backgroundColor: lightBlue[50],
                         mt: 1,
-                        width: '80px',
+                        width: '80px'
                       }}
                     >
-                      <img src={PerIcon} alt="Notification" />
+                      <img src={PerIcon} alt="Performance Icon" />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -112,21 +117,21 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                   <Grid item>
                     <Typography
                       sx={{
-                        color: "white", // Original light blue shade
+                        color: 'white',
                         fontSize: '2.125rem',
                         fontWeight: 500,
                         mr: 1,
                         mt: 1.75,
-                        mb: 0.75,
+                        mb: 0.75
                       }}
                     >
-                      {attend !== null ? attend : 'Loading...'}
+                      {error ? error : attend !== null ? `${attend}%` : 'Loading...'}
                     </Typography>
                   </Grid>
                 </Grid>
               </Grid>
               <Grid item sx={{ mb: 1.25 }}>
-                <Typography sx={{ fontSize: '1rem', fontWeight: 500, color: "white" }}>Taux d&apos;absentéisme</Typography>
+                <Typography sx={{ fontSize: '1rem', fontWeight: 500, color: 'white' }}>Absenteeism Rate</Typography>
               </Grid>
             </Grid>
           </Box>
@@ -137,7 +142,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
 };
 
 TotalOrderLineChartCard.propTypes = {
-  isLoading: PropTypes.bool,
+  isLoading: PropTypes.bool
 };
 
 export default TotalOrderLineChartCard;

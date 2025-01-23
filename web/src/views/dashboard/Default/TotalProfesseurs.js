@@ -17,7 +17,7 @@ const blue = {
   600: '#1e88e5',
   700: '#1976d2',
   800: '#1565c0',
-  900: '#0d47a1',
+  900: '#0d47a1'
 };
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -72,7 +72,7 @@ const TotalProfesseurs = ({ isLoading }) => {
 
         const response = await fetch('http://localhost:3001/api1/v1/professeurs/count', {
           headers: {
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`
           }
         });
         if (response.ok) {
@@ -108,7 +108,7 @@ const TotalProfesseurs = ({ isLoading }) => {
                         width: '50px'
                       }}
                     >
-                      <img className='my-20' src={EarningIcon} alt="Notification" />
+                      <img className="my-20" src={EarningIcon} alt="Notification" />
                     </Avatar>
                   </Grid>
                 </Grid>
@@ -116,7 +116,9 @@ const TotalProfesseurs = ({ isLoading }) => {
               <Grid item>
                 <Grid container alignItems="center">
                   <Grid item>
-                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>{professorsCount ?? 'Loading...'}</Typography>
+                    <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
+                      {professorsCount ?? 'Loading...'}
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>
@@ -125,10 +127,10 @@ const TotalProfesseurs = ({ isLoading }) => {
                   sx={{
                     fontSize: '1rem',
                     fontWeight: 500,
-                    color: "white"
+                    color: 'white'
                   }}
                 >
-                  Total professeurs
+                  Total Lecturers
                 </Typography>
               </Grid>
             </Grid>

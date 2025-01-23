@@ -11,7 +11,6 @@ import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 // assets
 import PerIcon from 'assets/images/icons/perDark.svg';
 
-
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.primary.dark,
@@ -55,17 +54,17 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
             <List sx={{ py: 0 }}>
               <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
                 <ListItemAvatar>
-                <Avatar
-                      variant="rounded"
-                      sx={{
-                        ...theme.typography.commonAvatar,
-                        ...theme.typography.largeAvatar,
-                        backgroundColor: theme.palette.primary.dark,
-                        mt: 1
-                      }}
-                    >
-                      <img src={PerIcon} alt="Notification" />
-                    </Avatar>
+                  <Avatar
+                    variant="rounded"
+                    sx={{
+                      ...theme.typography.commonAvatar,
+                      ...theme.typography.largeAvatar,
+                      backgroundColor: theme.palette.primary.dark,
+                      mt: 1
+                    }}
+                  >
+                    <img src={PerIcon} alt="Notification" />
+                  </Avatar>
                 </ListItemAvatar>
                 <ListItemText
                   sx={{
@@ -75,7 +74,7 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   }}
                   primary={
                     <Typography variant="h4" sx={{ color: '#fff' }}>
-                      $203k
+                      Ksh 203k
                     </Typography>
                   }
                   secondary={

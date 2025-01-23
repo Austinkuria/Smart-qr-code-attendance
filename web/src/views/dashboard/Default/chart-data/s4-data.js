@@ -11,7 +11,7 @@ const predefinedNames = [
   'Transfer Students'
 ];
 
-const ChartComponent = () => {
+const ChartData = () => {
   const [error, setError] = useState(null);
   const [chartData, setChartData] = useState({
     height: 480,
@@ -124,4 +124,4 @@ const ChartComponent = () => {
   );
 };
 
-export default ChartComponent;
+export default ChartData;

@@ -65,7 +65,7 @@ const SignInSignUpForm = () => {
         navigate(`/update-password/${nom}`);
       } else if (userRole === 'admin') {
         navigate('/admin');
-      } else if (userRole === 'Lecturer') {
+      } else if (userRole === 'Professeurs') {
         navigate('/seances');
       } else {
         navigate('/');

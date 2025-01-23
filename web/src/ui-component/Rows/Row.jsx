@@ -18,7 +18,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 
 
-const Row = (props: { row: ReturnType<typeof createData> }) => {
+const Row = (props) => {
     const { row } = props;
     const [open, setOpen] = useState(false);
 
