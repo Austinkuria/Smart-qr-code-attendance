@@ -21,7 +21,7 @@ const Action = ({ Action, params }) => {
         <div>
             {(() => {
                 switch (Action) {
-                    case "plus d'informations":
+                    case "View More Information":
                         return (
                             <>
                                 <Tooltip title={Action}>
@@ -36,7 +36,7 @@ const Action = ({ Action, params }) => {
                             </>
                         );
                     
-                    case "Modifier les informations":
+                    case "Edit Information":
                         return (
                             <Tooltip title={Action}>
                                 <IconButton onClick={handleClickOpen}>
@@ -46,7 +46,7 @@ const Action = ({ Action, params }) => {
                                 <TableModElv params={params} openAjouter={openAjouter} setOpenAjouter={setOpenAjouter} />
                             </Tooltip>
                         );
-                    case "Supprimer":
+                    case "Delete":
                         return (
                             <Tooltip title={Action}>
                                 <IconButton onClick={() => setOpen(true)} sx={{

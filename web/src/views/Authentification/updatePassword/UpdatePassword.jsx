@@ -26,10 +26,10 @@ const UpdatePassword = () => {
     setShowPassword(!showPassword);
   };
 
-  const handlUpdate = async (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
     if (newPassword !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      setError('Passwords do not match. Please try again.');
       return;
     }
     try {
@@ -44,9 +44,9 @@ const UpdatePassword = () => {
 
       if (!response.ok) {
         if (response.status === 404) {
-          throw new Error('Votre ancien mot de passe est incorrect. Veuillez vérifier et réessayer');
+          throw new Error('Your old password is incorrect. Please check and try again.');
         } else {
-          throw new Error('Échec de la mise à jour du mot de passe');
+          throw new Error('Failed to update the password. Please try again.');
         }
       }
 
@@ -54,7 +54,7 @@ const UpdatePassword = () => {
       navigate('/');
     } catch (error) {
       console.error('Update Password Error:', error);
-      setError('Une erreur s\'est produite lors de la mise à jour du mot de passe');
+      setError('An error occurred while updating the password. Please try again.');
     }
   };
 
@@ -65,22 +65,22 @@ const UpdatePassword = () => {
           <div className="row gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
               <h1 className="my-2 display-3 fw-bold ls-tight text-primary" style={{ marginTop: '-20px' }}>
-                Bonjour <br /> <small>{nom}</small> <br />
+                Hello <br /> <small>{nom}</small> <br />
               </h1>
               <span className="text" style={{ color: 'Black', fontSize: '1.2rem' }}>
-                Merci de mettre à jour votre mot de passe pour des raisons de sécurité.
+                Please update your password for security reasons.
               </span>
             </div>
 
             <div className="col-lg-6 mb-5 mb-lg-0">
               <div className="card">
                 <div className="card-body py-5 px-md-5">
-                  <form onSubmit={handlUpdate}>
+                  <form onSubmit={handleUpdate}>
                     <div className="form-outline mb-4">
                       <input
                         type={showPassword ? 'text' : 'password'}
                         className="form-control"
-                        placeholder="Nouveau mot de passe"
+                        placeholder="New Password"
                         value={newPassword}
                         onChange={handleNewPasswordChange}
                       />
@@ -89,7 +89,7 @@ const UpdatePassword = () => {
                       <input
                         type={showPassword ? 'text' : 'password'}
                         className="form-control"
-                        placeholder="Confirmer le nouveau mot de passe"
+                        placeholder="Confirm New Password"
                         value={confirmPassword}
                         onChange={handleConfirmPasswordChange}
                       />
@@ -126,7 +126,7 @@ const UpdatePassword = () => {
 
                     <div className="text-center">
                       <button type="submit" className="btn btn-primary btn-block mb-4">
-                        Valider
+                        Submit
                       </button>
                     </div>
                   </form>

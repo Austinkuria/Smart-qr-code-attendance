@@ -15,13 +15,11 @@ const Action = ({ Action, params, deleteProfFromTable }) => {
     };
     // Function to toggle showing/hiding profile
     
-    
-
     return (
         <div>
             {(() => {
                 switch (Action) {
-                    case "plus d'informations":
+                    case "View More Information":
                         return (
                             <>
                                 <Tooltip title={Action}>
@@ -36,7 +34,7 @@ const Action = ({ Action, params, deleteProfFromTable }) => {
                             </>
                         );
                     
-                    case "Modifier les informations":
+                    case "Edit Information":
                         return (
                             <Tooltip title={Action}>
                                 <IconButton onClick={handleClickOpen}>
@@ -46,7 +44,7 @@ const Action = ({ Action, params, deleteProfFromTable }) => {
                                 <TableModPrf params={params} openAjouter={openAjouter} setOpenAjouter={setOpenAjouter} />
                             </Tooltip>
                         );
-                    case "Supprimer" :
+                    case "Delete" :
                         return (
                             <Tooltip title={Action}>
                                 <IconButton onClick={() => setOpen(true)} sx={{
@@ -60,7 +58,8 @@ const Action = ({ Action, params, deleteProfFromTable }) => {
                             </Tooltip>
                         );
                     default:
-                        return <h6>Erreur: action non reconnue!</h6>;
+                        return <h6>Error: The action '{Action}' is not recognized. Please try again or contact support.</h6>;
+                        
                 }
             })()}
             {/* Confirmation dialog for deleting item */}

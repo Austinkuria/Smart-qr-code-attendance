@@ -5,10 +5,10 @@ const Semestre = require('../models/Semestres')
 
 exports.createStudent = async (req, res) => {
     try {
-        const { nom, prenom, cne, cin, email, issueDe, telephone, filieres, semestre } = req.body;
+        const { nom, prenom, cne, cin, email, admissionCategory, telephone, filieres, semestre } = req.body;
 
         // Validate required fields
-        if (!nom || !prenom || !cne || !cin || !issueDe || !filieres || !semestre) {
+        if (!nom || !prenom || !cne || !cin || !admissionCategory || !filieres || !semestre) {
             return res.status(400).json({ success: false, message: 'All fields are required' });
         }
 
@@ -24,7 +24,7 @@ exports.createStudent = async (req, res) => {
             cne,
             cin,
             email,
-            issueDe,
+            admissionCategory,
             telephone,
             filieres,
             semestre
@@ -146,7 +146,7 @@ exports.importStud = async (req, res) => {
         const csvData = await csv({
             delimiter: ';', // Ensure the delimiter is correctly set
             noheader: false, // Ensure headers are used
-            headers: ['nom', 'penom', 'telephone', 'cin', 'filiere', 'semestre', 'email', 'issueDe', 'cne'], // Specify headers
+            headers: ['nom', 'penom', 'telephone', 'cin', 'filiere', 'semestre', 'email', 'admissionCategory', 'cne'], // Specify headers
         }).fromFile(req.file.path);
 
         // Log the parsed CSV data
@@ -160,12 +160,12 @@ exports.importStud = async (req, res) => {
         // Processing each row
         for (const row of csvData) {
             // Check if the row is empty
-            if (!row.nom || !row.penom || !row.telephone || !row.cin || !row.filiere || !row.semestre || !row.email || !row.issueDe || !row.cne) {
+            if (!row.nom || !row.penom || !row.telephone || !row.cin || !row.filiere || !row.semestre || !row.email || !row.admissionCategory || !row.cne) {
                 continue; // Skip empty or incomplete rows
             }
 
             // Extracting data from the row
-            const { nom, penom: prenom, telephone, cin, filiere: filiereName, semestre: semestreName, email, issueDe, cne } = row;
+            const { nom, penom: prenom, telephone, cin, filiere: filiereName, semestre: semestreName, email, admissionCategory, cne } = row;
 
             // Find the filiere
             const filiereObject = await Filiere.findOne({ shortNom: filiereName.trim().replace(/�/g, "é") });
@@ -184,7 +184,7 @@ exports.importStud = async (req, res) => {
                 filieres: filiereId ? [filiereId] : [],
                 semestre: semestreId,
                 email,
-                issueDe,
+                admissionCategory,
                 cne
             };
             console.log('Student Data Item:', studentDataItem);

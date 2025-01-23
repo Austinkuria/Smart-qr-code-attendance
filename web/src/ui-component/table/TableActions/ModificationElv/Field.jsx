@@ -5,13 +5,13 @@ import { useState } from 'react';
 import SelectFiliere from './SelectFiliere';
 import Box from '@mui/material/Box';
 
-import SelectIssueDe from './SelectIssueDe';
+import SelectAdmissionCategory from './SelectAdmissionCategory';
 import SelectSemestre from './SelectSemestre';
 
 
 
 
-const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, onSemestreSelect,filiereSelected }) => { // Accepting props
+const Field = ({ params, handleInputChange, onFiliereSelect, onAdmissionCategorySelect, onSemestreSelect, filiereSelected }) => { // Accepting props
   const [nom, setName] = useState(params.nom);
   const [prenom, setPrenom] = useState(params.prenom);
   const [email, setEmail] = useState(params.email);
@@ -29,118 +29,100 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
   const [prenomError, setPrenomError] = useState('');
   const [cneError, setCneError] = useState('');
 
-
- 
- 
-
-
   const handleNameChange = (event) => {
-    console.log(params.nom)
-    console.log('lhiiiiiiih')
-
     const value = event.target.value;
     setName(value);
-    // Perform validation using regular expression
     const regex = /^[a-zA-Z]+$/;
     if (!regex.test(value)) {
-      setNameError('Nom doit contenir uniquement des lettres.');
+      setNameError('First Name must contain only letters.');
     } else if (value.length < 3) {
-      setNameError('Nom doit contenir au moins 3 caractères.');
+      setNameError('First Name must contain at least 3 characters.');
     } else {
       setNameError('');
     }
     handleInputChange(event);
-
   };
 
   const handlePrenomChange = (event) => {
     const value = event.target.value;
     setPrenom(value);
-    // Perform validation using regular expression
     const regex = /^[a-zA-Z]+$/;
     if (!regex.test(value)) {
-      setPrenomError('Prenom doit contenir uniquement des lettres.');
+      setPrenomError('Last Name must contain only letters.');
     } else if (value.length < 3) {
-      setPrenomError('Prenom doit contenir au moins 3 caractères.');
+      setPrenomError('Last Name must contain at least 3 characters.');
     } else {
       setPrenomError('');
     }
     handleInputChange(event);
-
   };
 
   const handleEmailChange = (event) => {
     const value = event.target.value;
     setEmail(value);
-    // Email validation using regular expression
     const regex = /^[^\s@]+@[^\s@]+\.(gmail\.com|yahoo\.com)$/i; // Validating for Gmail.com and Yahoo.com domains
     if (!regex.test(value)) {
-      setEmailError('Adresse email invalide ou domaine non supporté.');
+      setEmailError('Invalid email address or unsupported domain.');
     } else {
       setEmailError('');
     }
     handleInputChange(event);
-
   };
 
   const handleCinChange = (event) => {
     const value = event.target.value;
     setCin(value);
-    // Validation using regular expression
-    const regex = /^[a-zA-Z0-9]*$/; // Only allow alphanumeric characters
+    // Validation for numeric ID
+    const regex = /^[0-9]*$/; // Only allow numeric characters
     if (!regex.test(value)) {
-      setCinError('CIN doit contenir uniquement des caractères alphanumériques.');
+      setCinError('ID number must contain only numeric characters.');
     } else {
       setCinError('');
     }
     handleInputChange(event);
-
   };
+
   const handleCneChange = (event) => {
     const value = event.target.value;
     setCne(value);
-    // Validation using regular expression
-    const regex = /^[a-zA-Z0-9]*$/; // Only allow alphanumeric characters
+    // Validation for alphanumeric registration number
+    const regex = /^[a-zA-Z0-9]*$/; // Allow alphanumeric characters
     if (!regex.test(value)) {
-      setCneError('CNE doit contenir uniquement des caractères alphanumériques.');
+      setCneError('Registration number must contain only alphanumeric characters.');
     } else {
       setCneError('');
     }
     handleInputChange(event);
-
   };
 
   const handleTelephoneChange = (event) => {
     const value = event.target.value;
     setTelephone(value);
-    // Validation using regular expression
-    const regex = /^(\+)?\d*$/;
+    const regex = /^(\+)?\d{1,15}$/; // Allow numeric characters, optional "+" sign, and up to 15 digits
     if (!regex.test(value)) {
-      setTelephoneError('Numéro de téléphone doit contenir uniquement des chiffres.');
-    } else {
-      setTelephoneError('');
+      setTelephoneError('Telephone number must contain only digits and be up to 15 digits long.');
+    }
+    else {
+      setTelephoneError(''); // Clear the error if the value is valid
     }
     handleInputChange(event);
-
   };
 
   const handleDateNaissanceChange = (event) => {
     setDateNaissance(event.target.value);
     handleInputChange(event);
-
   };
 
   const handleLieuNaissanceChange = (event) => {
     setLieuNaissance(event.target.value);
     handleInputChange(event);
-
   };
 
   const handleAdresseChange = (event) => {
     setAdresse(event.target.value);
     handleInputChange(event);
-
   };
+
   const handleFocus = () => {
     setFocused(true);
   };
@@ -154,19 +136,15 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
     setPrenomError('');
   };
 
-
   return (
-
     <>
-     
-
       <TextField
         autoFocus
         required
         margin="dense"
         id="nom"
         name="nom"
-        label="Nom"
+        label="First Name"
         fullWidth
         variant="standard"
         value={nom}
@@ -175,14 +153,13 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         onBlur={handleBlur}
         error={!!nameError}
         helperText={nameError}
-      
       />
       <TextField
         required
         margin="dense"
         id="prenom"
         name="prenom"
-        label="Prenom"
+        label="Last Name"
         fullWidth
         variant="standard"
         value={prenom}
@@ -213,7 +190,7 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         margin="dense"
         id="cin"
         name="cin"
-        label="CIN"
+        label="ID No"
         fullWidth
         variant="standard"
         value={cin}
@@ -223,12 +200,12 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         error={!!cinError && focused}
         helperText={cinError && focused ? cinError : ''}
       />
-       <TextField
+      <TextField
         required
         margin="dense"
         id="cne"
         name="cne"
-        label="CNE"
+        label="Registration Number"
         fullWidth
         variant="standard"
         value={cne}
@@ -242,7 +219,7 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         margin="dense"
         id="telephone"
         name="telephone"
-        label="Numéro de téléphone"
+        label="Telephone"
         fullWidth
         variant="standard"
         value={telephone}
@@ -256,18 +233,18 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         margin="dense"
         id="dateNaissance"
         name="dateNaissance"
+        label="Date of Birth"
         fullWidth
-        type='date'
+        type="date"
         variant="standard"
         value={dateNaissance}
         onChange={handleDateNaissanceChange}
       />
-
       <TextField
         margin="dense"
         id="lieuNaissance"
         name="lieuNaissance"
-        label="Lieu de Naissance"
+        label="Place of Birth"
         fullWidth
         variant="standard"
         value={lieuNaissance}
@@ -277,29 +254,25 @@ const Field = ({ params, handleInputChange, onFiliereSelect, onIssueDeSelect, on
         margin="dense"
         id="adresse"
         name="adresse"
-        label="Adresse"
+        label="Address"
         fullWidth
         variant="standard"
         value={adresse}
         onChange={handleAdresseChange}
       />
       <br />
-      
-  
-      <Box component="section" sx={{    paddingBottom: "1px" }}>
-     <SelectFiliere params={params} onFiliereSelect={onFiliereSelect} /> {/* Pass onFiliereSelect prop */}
+      <Box component="section" sx={{ paddingBottom: '1px' }}>
+        <SelectFiliere params={params} onFiliereSelect={onFiliereSelect} />
       </Box>
-
-      <Box component="section" sx={{ paddingBottom: "1px" }}>
-      <SelectSemestre params={params} onSemestreSelect={onSemestreSelect} filiereSelected={filiereSelected}/> {/* Pass onIssueDeSelect prop */}
+      <Box component="section" sx={{ paddingBottom: '1px' }}>
+        <SelectSemestre params={params} onSemestreSelect={onSemestreSelect} filiereSelected={filiereSelected} />
       </Box>
-      <Box component="section" sx={{ paddingBottom: "1px" }}>
-      <SelectIssueDe params={params} onIssueDeSelect={onIssueDeSelect} /> {/* Pass onIssueDeSelect prop */}
+      <Box component="section" sx={{ paddingBottom: '1px' }}>
+        <SelectAdmissionCategory params={params} onAdmissionCategorySelect={onAdmissionCategorySelect} />
       </Box>
-
 
     </>
-  )
-}
+  );
+};
 
-export default Field
+export default Field;

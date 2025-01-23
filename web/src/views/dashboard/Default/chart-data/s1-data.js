@@ -1,100 +1,127 @@
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Chart from 'react-apexcharts'; // Import the ApexCharts component
 
-const predefinedNames = ['2ITE', 'ISIC', 'GC', 'G2E', 'GI', 'CCN', '2AP'];
+const predefinedNames = [
+  'KCSE',
+  'Diploma Holders',
+  'Self-Sponsored (Private)',
+  'Government-Sponsored',
+  'Parallel Program',
+  'Transfer Students'
+];
 
-// Initialize ChartData.series with predefined names and empty data arrays
-const ChartData = {
-  height: 480,
-  type: 'bar',
-  options: {
-    chart: {
-      id: 'bar-chart',
-      stacked: true,
-      toolbar: {
-        show: true
+const ChartComponent = () => {
+  const [error, setError] = useState(null);
+  const [chartData, setChartData] = useState({
+    height: 480,
+    type: 'bar',
+    options: {
+      chart: {
+        id: 'bar-chart',
+        stacked: true,
+        toolbar: {
+          show: true
+        },
+        zoom: {
+          enabled: true
+        }
       },
-      zoom: {
-        enabled: true
-      }
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          legend: {
-            position: 'bottom',
-            offsetX: -10,
-            offsetY: 0
+      responsive: [
+        {
+          breakpoint: 480,
+          options: {
+            legend: {
+              position: 'bottom',
+              offsetX: -10,
+              offsetY: 0
+            }
           }
         }
-      }
-    ],
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '50%'
-      }
-    },
-    xaxis: {
-      type: 'category',
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
-    },
-    legend: {
-      show: true,
-      fontSize: '14px',
-      fontFamily: `'Roboto', sans-serif`,
-      position: 'bottom',
-      offsetX: 20,
-      labels: {
-        useSeriesColors: false
+      ],
+      plotOptions: {
+        bar: {
+          horizontal: false,
+          columnWidth: '50%'
+        }
       },
-      markers: {
-        width: 16,
-        height: 16,
-        radius: 5
+      xaxis: {
+        type: 'category',
+        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       },
-      itemMargin: {
-        horizontal: 15,
-        vertical: 8
+      legend: {
+        show: true,
+        fontSize: '14px',
+        fontFamily: `'Roboto', sans-serif`,
+        position: 'bottom',
+        offsetX: 20,
+        labels: {
+          useSeriesColors: false
+        },
+        markers: {
+          width: 16,
+          height: 16,
+          radius: 5
+        },
+        itemMargin: {
+          horizontal: 15,
+          vertical: 8
+        }
+      },
+      fill: {
+        type: 'solid'
+      },
+      dataLabels: {
+        enabled: false
+      },
+      grid: {
+        show: true
       }
     },
-    fill: {
-      type: 'solid'
-    },
-    dataLabels: {
-      enabled: false
-    },
-    grid: {
-      show: true
-    }
-  },
-  series: predefinedNames.map(name => ({
-    name: name,
-    data: Array(12).fill(0) // Initialize with 12 zeros for each month
-  }))
-};
-
-axios.get('http://localhost:3001/api1/v1/liste/absencesByFiliereBySem/1')
-  .then(response => {
-    const dataa = response.data;
-    console.log('API response:', dataa);
-
-    dataa.forEach((item) => {
-      console.log('hn',item.filiere)
-      const dataIndex = predefinedNames.indexOf(item.filiere.toString());
-      if (dataIndex !== -1) {
-        console.log(`Updating series for ${item.filiere} at index ${dataIndex}`);
-        console.log('Absence data:', Object.values(item.absences));
-        ChartData.series[dataIndex].data = Object.values(item.absences).map(value => parseInt(value));
-      } else {
-        console.log(`Filiere ${item.filiere} not found in predefinedNames`);
-      }
-    });
-
-    console.log('ChartData with updated series:', ChartData.series);
-  })
-  .catch(error => {
-    console.error('Error fetching data:', error);
+    series: predefinedNames.map((name) => ({
+      name: name,
+      data: Array(12).fill(0)
+    }))
   });
 
-export default ChartData;
+  // Fetch data from API and update chartData
+  const fetchDataAndUpdateChart = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api1/v1/liste/absencesByFiliereBySem/1');
+      const data = response.data;
+      console.log('API response:', data);
+
+      const updatedSeries = chartData.series.map((seriesItem) => {
+        const item = data.find((dataItem) => dataItem.filiere === seriesItem.name);
+        if (item) {
+          return {
+            ...seriesItem,
+            data: Object.values(item.absences).map((value) => parseInt(value, 10))
+          };
+        }
+        return seriesItem;
+      });
+
+      setChartData((prevData) => ({
+        ...prevData,
+        series: updatedSeries
+      }));
+    } catch (error) {
+      console.error('Error fetching data:', error);
+      setError('An error occurred while fetching the data. Please try again later.');
+    }
+  };
+
+  useEffect(() => {
+    fetchDataAndUpdateChart();
+  }, []);
+
+  return (
+    <div>
+      {error && <div style={{ color: 'red', marginBottom: '20px' }}>{error}</div>}
+      <Chart options={chartData.options} series={chartData.series} type={chartData.type} height={chartData.height} />
+    </div>
+  );
+};
+
+export default ChartComponent;

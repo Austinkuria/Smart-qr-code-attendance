@@ -1,8 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-
 //**********************import material ui*************************//
-
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -12,14 +10,10 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
-
 //**********************import project*************************//
 import MainCard from '../../ui-component/cards/MainCard';
 import Row from '../../ui-component/Rows/Row';
 import { rows } from './Data/DataContact';
-
-
-
 
 // ==============================|| ContactPage ||============================== //
 
@@ -30,8 +24,8 @@ const ContactPage = () => (
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Nom de professeur</TableCell>
-            <TableCell align="right">Rôle</TableCell>
+            <TableCell>Lecturer Name</TableCell>
+            <TableCell align="right">Role</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -41,9 +35,7 @@ const ContactPage = () => (
         </TableBody>
       </Table>
     </TableContainer>
-
   </MainCard>
 );
 
 export default ContactPage;
-

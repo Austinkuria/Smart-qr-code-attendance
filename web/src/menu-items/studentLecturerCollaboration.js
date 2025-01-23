@@ -11,27 +11,28 @@ const icons = {
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
 
-const enseignatsEtudiants = {
-  id: 'Collaboration Étudiant-Enseignant',
-  title: 'Collaboration Étudiant-Enseignant',
+const studentLecturerCollaboration = {
+  id: 'Student-Lecturer Information',
+  title: 'Student and Lecturer Information',
   type: 'group',
   children: [
     {
-      id: 'Enseignants',
-      title: 'Enseignants',
+      id: 'Lecturers',
+      title: 'Lecturers',
       type: 'item',
       url: '/admin/Enseignants',
       icon: icons.IconUser,
       breadcrumbs: false
     },
     {
-      id: 'Listes des élèves',
-      title: 'Listes des élèves',
+      id: 'Student Lists',
+      title: 'Student Lists',
       type: 'item',
       url: '/admin/liste-éleves',
       icon: icons.IconPencil,
       breadcrumbs: false
-    }]
+    }
+  ]
 };
 
-export default enseignatsEtudiants;
+export default studentLecturerCollaboration;

@@ -210,7 +210,7 @@ exports.GetElementById = (req, res) => {
 /*exports.Deleteelement = (req, res) => {
     const elementID = req.params.id;
 
-    // Supprimer l'élément principal
+    // Delete l'élément principal
     Element.findByIdAndDelete(elementID)
         .then((element) => {
             if (!element) {

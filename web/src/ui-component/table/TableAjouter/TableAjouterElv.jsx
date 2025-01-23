@@ -10,18 +10,22 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { useTheme } from '@mui/material/styles';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 import axios from 'axios';
 
-const TableAjouterElv = ({ openAjouter, setOpenAjouter,addStudentToTable }) => {
+const TableAjouterElv = ({ openAjouter, setOpenAjouter, addStudentToTable }) => {
     const theme = useTheme();
 
     const [formData, setFormData] = useState({});
     const [selectedFiliere, setSelectedFiliere] = useState('');
-    const [selectedIssueDe, setSelectedIssueDe] = useState('');
+    const [selectedCategory, setSelectedIssueDe] = useState('');
     const [selectedSemestre, setSelectedSemestre] = useState('');
+    const [errorMessage, setErrorMessage] = useState(''); // State for managing error messages
 
     const handleClose = () => {
         setOpenAjouter(false);
+        setErrorMessage(''); // Clear errors when closing the dialog
     };
 
     const handleSubmit = async (event) => {
@@ -30,17 +34,18 @@ const TableAjouterElv = ({ openAjouter, setOpenAjouter,addStudentToTable }) => {
             const response = await axios.post('http://localhost:3001/api1/v1/students/createStudent', {
                 ...formData,
                 filieres: [selectedFiliere], // Convert selectedFiliere to an array
-                issueDe: selectedIssueDe,
+                admissionCategory: selectedCategory,
                 semestre: selectedSemestre
             });
-            console.log('Object created:', response.data);
+            console.log('Student created successfully:', response.data);
             handleClose();
             addStudentToTable(response.data);
-            // window.location.reload(); // Refresh the page after successful creation
-        
         } catch (error) {
-            console.error('Error creating object:' + error);
-            alert('An error ' + error);
+            console.error('Error creating student:', error);
+            setErrorMessage(
+                error.response?.data?.message || 
+                'An error occurred while adding the student. Please try again.'
+            );
         }
     };
 
@@ -55,56 +60,79 @@ const TableAjouterElv = ({ openAjouter, setOpenAjouter,addStudentToTable }) => {
         setSelectedFiliere(filiere);
     };
 
-    const handleIssueDeSelect = (issueDe) => {
-        setSelectedIssueDe(issueDe);
+    const handleAdmissionCategorySelect= (admissionCategory) => {
+        setSelectedIssueDe(admissionCategory);
     };
 
     const handleSemestreSelect = (semestre) => {
-        console.log('smstrhhhhhhh', selectedSemestre)
-
+        console.log('Selected semester:', semestre);
         setSelectedSemestre(semestre);
     };
 
     return (
-        <Dialog
-            open={openAjouter}
-            onClose={handleClose}
-            PaperProps={{
-                component: 'form',
-                onSubmit: handleSubmit
-            }}
-        >
-            <DialogTitle sx={{ fontSize: '16px', color: 'black' }}>
-                <IconButton edge="start" sx={{ mr: 1 }}>
-                    <IconUserPlus />
-                </IconButton>
-                Ajouter Un élève
-            </DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Les champs marqués un astérisque (*) sont obligatoires.
-                </DialogContentText>
-                <Field
-                    handleInputChange={handleInputChange}
-                    onFiliereSelect={handleFiliereSelect}
-                    onIssueDeSelect={handleIssueDeSelect}
-                    onSemestreSelect={handleSemestreSelect}
-                    filiereSelected={selectedFiliere} // Pass selectedFiliere as prop
-                />
-            </DialogContent>
-            <DialogActions>
-                <Button sx={{ color: 'grey' }} onClick={handleClose}>Annuler</Button>
-                <Button type="submit" sx={{
-                    transition: 'all .2s ease-in-out',
-                    background: theme.palette.secondary.dark,
-                    color: 'white',
-                    '&:hover': {
-                        background: theme.palette.secondary.dark,
-                        color: theme.palette.secondary.light
-                    }
-                }}>Ajouter</Button>
-            </DialogActions>
-        </Dialog>
+        <>
+            <Dialog
+                open={openAjouter}
+                onClose={handleClose}
+                PaperProps={{
+                    component: 'form',
+                    onSubmit: handleSubmit
+                }}
+            >
+                <DialogTitle sx={{ fontSize: '16px', color: 'black' }}>
+                    <IconButton edge="start" sx={{ mr: 1 }}>
+                        <IconUserPlus />
+                    </IconButton>
+                    Add a Student
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Fields marked with an asterisk (*) are required.
+                    </DialogContentText>
+                    <Field
+                        handleInputChange={handleInputChange}
+                        onFiliereSelect={handleFiliereSelect}
+                        onAdmissionCategorySelect={handleAdmissionCategorySelect}
+                        onSemestreSelect={handleSemestreSelect}
+                        filiereSelected={selectedFiliere}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button sx={{ color: 'grey' }} onClick={handleClose}>
+                        Cancel
+                    </Button>
+                    <Button
+                        type="submit"
+                        sx={{
+                            transition: 'all .2s ease-in-out',
+                            background: theme.palette.secondary.dark,
+                            color: 'white',
+                            '&:hover': {
+                                background: theme.palette.secondary.dark,
+                                color: theme.palette.secondary.light
+                            }
+                        }}
+                    >
+                        Add
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Error Snackbar */}
+            <Snackbar
+                open={!!errorMessage}
+                autoHideDuration={6000}
+                onClose={() => setErrorMessage('')}
+            >
+                <Alert
+                    onClose={() => setErrorMessage('')}
+                    severity="error"
+                    sx={{ width: '100%' }}
+                >
+                    {errorMessage}
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 

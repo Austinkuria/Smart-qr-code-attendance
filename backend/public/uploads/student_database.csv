@@ -1,4 +1,4 @@
-nom;prenom;telephone;cin;filiere;semestre;email;issueDe;cne
+nom;prenom;telephone;cin;filiere;semestre;email;admissionCategory;cne
 Doe;John;1234567890;CIN001;Informatique;2025 Spring;john.doe@example.com;BAC;CNE001
 Smith;Jane;0987654321;CIN002;Mathematiques;2025 Spring;jane.smith@example.com;PASSERELLE;CNE002
 Brown;Michael;1122334455;CIN003;Physique;2025 Fall;michael.brown@example.com;2AP;CNE003

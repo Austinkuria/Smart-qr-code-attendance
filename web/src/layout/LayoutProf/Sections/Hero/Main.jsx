@@ -40,7 +40,7 @@ const Main = () => {
                     </div>
                 </div>
             </div>
-            <div className="site-section" id='propre'>
+            <div className="site-section" id='#about'>
                 <div className="container">
                     <div className="row justify-content-center text-center mb-5">
                         <div className="col-md-5" data-aos="fade-up">

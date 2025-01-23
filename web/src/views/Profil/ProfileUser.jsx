@@ -28,7 +28,7 @@ function ProfileUser() {
     ) : (
         <div style={{ backgroundColor: '#f0f0f0', padding: '20px', borderRadius: '10px', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.1)' }}>
             {/* Cover Header */}
-            <div style={{ backgroundColor: '#2d71a1', color: '#fff', padding: '20px', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', display: 'flex', alignItems: 'center' }}>
+            <div style={{ backgroundColor: '#5D6D7E', color: '#fff', padding: '20px', borderTopLeftRadius: '10px', borderTopRightRadius: '10px', display: 'flex', alignItems: 'center' }}>
                 {/* Image */}
                 <div style={{ marginRight: '20px' }}>
                     <img src={User1} alt="Profile" style={{ width: '100px', height: '100px', borderRadius: '50%', border: '5px solid white', boxShadow: '0px 0px 10px rgba(0, 0, 0, 0.3)' }} />

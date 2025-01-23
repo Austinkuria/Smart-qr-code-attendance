@@ -219,7 +219,7 @@ const SeancesToday = () => {
   return (
     <div
       style={{
-        background: '#2d71a1',
+        background: '#5D6D7E',
         padding: '120px 0',
         textAlign: 'center',
         marginBottom: '130px',

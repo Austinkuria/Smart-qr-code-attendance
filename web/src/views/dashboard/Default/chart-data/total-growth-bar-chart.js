@@ -68,24 +68,28 @@ const ChartData = {
       show: true
     }
   },
-  series: predefinedNames.map(name => ({
+  series: predefinedNames.map((name) => ({
     name: name,
     data: Array(12).fill(0) // Initialize with 12 zeros for each month
   }))
 };
 
-axios.get('http://localhost:3001/api1/v1/liste/absencesByFiliere')
-  .then(response => {
+axios
+  .get('http://localhost:3001/api1/v1/liste/absencesByFiliere')
+  .then((response) => {
     const dataa = response.data;
     console.log('API response:', dataa);
 
     dataa.forEach((item) => {
-      console.log('hn',item.filiere)
+      console.log('hn', item.filiere);
       const dataIndex = predefinedNames.indexOf(item.filiere.toString());
       if (dataIndex !== -1) {
         console.log(`Updating series for ${item.filiere} at index ${dataIndex}`);
         console.log('Absence data:', Object.values(item.absences));
-        ChartData.series[dataIndex].data = Object.values(item.absences).map(value => parseInt(value));
+        ChartData.series[dataIndex].data = Object.values(item.absences).map((value) => {
+          const parsedValue = parseInt(value);
+          return isNaN(parsedValue) ? 0 : parsedValue;
+        });
       } else {
         console.log(`Filiere ${item.filiere} not found in predefinedNames`);
       }
@@ -93,7 +97,7 @@ axios.get('http://localhost:3001/api1/v1/liste/absencesByFiliere')
 
     console.log('ChartData with updated series:', ChartData.series);
   })
-  .catch(error => {
+  .catch((error) => {
     console.error('Error fetching data:', error);
   });
 

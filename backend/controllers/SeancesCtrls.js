@@ -255,13 +255,13 @@ exports.deleteSeance = (req, res) => {
 
             const promises = [];
 
-            // Supprimer les références de la séance dans la collection Professeurs
+            // Delete les références de la séance dans la collection Professeurs
             promises.push(Professeurs.updateMany({ seance: seanceId }, { $unset: { seance: 1 } }));
 
-            // Supprimer les références de la séance dans la collection Elements
+            // Delete les références de la séance dans la collection Elements
             promises.push(Elements.updateMany({ seance: seanceId }, { $unset: { seance: 1 } }));
 
-            // Supprimer les références de la séance dans la collection Etudiants
+            // Delete les références de la séance dans la collection Etudiants
 
             return Promise.all(promises)
                 .then(() => {

@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-// TableAjouterProf.js
+// TableAjouterLecturer.js
 import React, { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -13,53 +13,50 @@ import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import Field from './fields/FieldProf';
 
-const TableAjouterProf = ({ openAjouter, setOpenAjouter,addProfToTable  }) => {
+const TableAjouterLecturer = ({ openAjouter, setOpenAjouter, addLecturerToTable }) => {
     const theme = useTheme();
     const [formData, setFormData] = useState({});
     const [selectedFilieres, setSelectedFilieres] = useState([]);
     const [selectedElements, setSelectedElements] = useState([]);
+    const [errorMessage, setErrorMessage] = useState("");
 
     const handleClose = () => {
         setOpenAjouter(false);
+        setErrorMessage("");
     };
-    
+
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            console.log(selectedFilieres);
-            console.log(selectedElements);
-            console.log("hnaaaaaaa");
-
-            const response = await axios.post('http://localhost:3001/api1/v1/professeurs/create', {
+            const response = await axios.post('http://localhost:3001/api1/v1/lecturers/create', {
                 ...formData,
                 filieres: selectedFilieres,
-                elements: selectedElements
+                elements: selectedElements,
             });
-            addProfToTable(response.data);
-            console.log('Object created:', response.data);
-            // window.location.reload(); // Refresh the page after successful deletion
-
+            addLecturerToTable(response.data);
+            console.log('Lecturer added successfully:', response.data);
             handleClose();
         } catch (error) {
-            console.error('Error creating object:', error);
+            console.error('Error adding lecturer:', error);
+            setErrorMessage("Failed to add lecturer. Please try again.");
         }
     };
 
     const handleInputChange = (event) => {
         setFormData({
             ...formData,
-            [event.target.name]: event.target.value
+            [event.target.name]: event.target.value,
         });
     };
 
     const handleFiliereSelect = (filiere) => {
         setSelectedFilieres(filiere);
-        setFormData({ ...formData, filieres: filiere }); 
+        setFormData({ ...formData, filieres: filiere });
     };
 
     const handleElementSelect = (element) => {
         setSelectedElements(element);
-        setFormData({ ...formData, elements: element }); 
+        setFormData({ ...formData, elements: element });
     };
 
     return (
@@ -68,40 +65,52 @@ const TableAjouterProf = ({ openAjouter, setOpenAjouter,addProfToTable  }) => {
             onClose={handleClose}
             PaperProps={{
                 component: 'form',
-                onSubmit: handleSubmit
+                onSubmit: handleSubmit,
             }}
         >
             <DialogTitle sx={{ fontSize: '16px', color: 'black' }}>
                 <IconButton edge="start" sx={{ mr: 1 }}>
                     <IconUserPlus />
                 </IconButton>
-                Ajouter Un Enseignant
+                Add a Lecturer
             </DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Les champs marqués un astérisque (*) sont obligatoires.
+                    Fields marked with an asterisk (*) are mandatory.
                 </DialogContentText>
-                <Field 
-                    handleInputChange={handleInputChange} 
-                    onFiliereSelect={handleFiliereSelect} 
-                    onElementSelect={handleElementSelect} 
+                {errorMessage && (
+                    <DialogContentText sx={{ color: 'red', marginTop: 1 }}>
+                        {errorMessage}
+                    </DialogContentText>
+                )}
+                <Field
+                    handleInputChange={handleInputChange}
+                    onFiliereSelect={handleFiliereSelect}
+                    onElementSelect={handleElementSelect}
                     filiereSelected={selectedFilieres}
                 />
             </DialogContent>
             <DialogActions>
-                <Button sx={{ color: 'grey' }} onClick={handleClose}>Annuler</Button>
-                <Button type="submit" sx={{
-                    transition: 'all .2s ease-in-out',
-                    background: theme.palette.secondary.dark,
-                    color: 'white',
-                    '&:hover': {
+                <Button sx={{ color: 'grey' }} onClick={handleClose}>
+                    Cancel
+                </Button>
+                <Button
+                    type="submit"
+                    sx={{
+                        transition: 'all .2s ease-in-out',
                         background: theme.palette.secondary.dark,
-                        color: theme.palette.secondary.light
-                    }
-                }}>Ajouter</Button>
+                        color: 'white',
+                        '&:hover': {
+                            background: theme.palette.secondary.dark,
+                            color: theme.palette.secondary.light,
+                        },
+                    }}
+                >
+                    Add
+                </Button>
             </DialogActions>
         </Dialog>
     );
 };
 
-export default TableAjouterProf;
+export default TableAjouterLecturer;

@@ -1,12 +1,12 @@
 import dashboard from './dashboard';
 import Formations from './Formations';
-import enseignatsEtudiants from './EnseignantsEtudiants';
+import studentLecturerCollaboration from './studentLecturerCollaboration';
 import other from './other';
 
 // ==============================|| MENU ITEMS ||============================== //
 
 const menuItems = {
-  items: [dashboard, Formations, enseignatsEtudiants, other]
+  items: [dashboard, Formations, studentLecturerCollaboration, other]
 };
 
 export default menuItems;

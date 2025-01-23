@@ -13,88 +13,88 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 250,
-    },
-  },
+      width: 250
+    }
+  }
 };
-let elementsF;
+
 const SelectElements = ({ onElementSelect, filiereSelected }) => {
-  const [selectedElements, setSelectedElements] = useState();
+  const [selectedElements, setSelectedElements] = useState({});
+  const [error, setError] = useState(null); // To manage error state
 
   useEffect(() => {
-    onElementSelect(elementsF);
+    // When selected elements change, call the parent function to update the elements
+    const allSelectedElements = Object.values(selectedElements).flat();
+    onElementSelect(allSelectedElements);
   }, [selectedElements, onElementSelect]);
 
   return (
     <div>
-      {filiereSelected.map((filiere) => (
-        <div className="mt-1" key={filiere}>
-          <SelectElement filiereId={filiere} selectedElements={selectedElements} setSelectedElements={setSelectedElements} />
+      {filiereSelected.map((filiereId) => (
+        <div className="mt-1" key={filiereId}>
+          <SelectElement
+            filiereId={filiereId}
+            selectedElements={selectedElements}
+            setSelectedElements={setSelectedElements}
+            setError={setError} // Pass error setter to child component
+          />
         </div>
       ))}
+      {error && <div style={{ color: 'red' }}>{error}</div>} {/* Show the error to the user */}
     </div>
   );
 };
 
-const SelectElement = ({ filiereId, setSelectedElements }) => {
+const SelectElement = ({ filiereId, selectedElements, setSelectedElements, setError }) => {
   const [libelle, setLibelle] = useState([]);
   const [elements, setElements] = useState([]);
-  const [filNom, setFilNom] = useState([]);
+  const [filNom, setFilNom] = useState('');
+  const [isLoading, setIsLoading] = useState(false); // To manage loading state
 
   useEffect(() => {
     const fetchElementsForFiliere = async () => {
+      setIsLoading(true); // Start loading
       try {
         const response = await fetch(`http://localhost:3001/api1/v1/filieres/getOnebyId/${filiereId}`);
+        if (!response.ok) {
+          throw new Error('Failed to fetch units for the selected academic program.'); // API error
+        }
         const data = await response.json();
         const filiereElements = data.filiereInstance.elements;
         setFilNom(data.filiereInstance.nomFiliere);
         setElements(filiereElements);
       } catch (error) {
-        console.error('Error fetching elements:', error);
+        setError(error.message); // Show the error to the user
+        console.error('Error fetching Units:', error); // Log to console for debugging
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     };
 
     fetchElementsForFiliere();
-  }, [filiereId]);
+  }, [filiereId, setError]);
 
   const handleChange = (event) => {
-    const selectedElements = event.target.value;
-    setLibelle(selectedElements);
-  
+    const selectedValues = event.target.value;
+    setLibelle(selectedValues);
+
     // Extract IDs of selected elements
-    const selectedElementIds = selectedElements.map((element) => element._id);
+    const selectedElementIds = selectedValues.map((element) => element._id);
 
-    
-    // Update selected elements for the current filière immutably
-    setSelectedElements((prevSelectedElements) => {
-      // Clone the previous selected elements for the current filière
-      const updatedSelectedElements = { ...prevSelectedElements };
+    // Update selected elements for the current Academic Program immutably
+    setSelectedElements((prevSelectedElements) => ({
+      ...prevSelectedElements,
+      [filiereId]: selectedElementIds
+    }));
+  };
 
-      // Update the selected element IDs for the current filière
-      updatedSelectedElements[filiereId] = selectedElementIds;
-      elementsF = Object.values(updatedSelectedElements).flatMap((ids) => ids);
-      setSelectedElements( Object.values(updatedSelectedElements).flatMap((ids) => ids));
-      console.log(elementsF);
-      console.log("iiiiiiiiiiooooooiiiiiiiii");
-
-      // Set selectedElementIds to newSelectedElementIds
-      //setSelectedElements(newSelectedElementIds);
-  
-      return updatedSelectedElements;
-    });
-    console.log(elementsF);
-    console.log("mmmmmmmmmmmmmm");
-};
-
-
-  
-  
-  
-  
+  if (isLoading) {
+    return <div>Loading Units for {filNom}...</div>; // Loading indicator
+  }
 
   return (
     <FormControl fullWidth sx={{ m: 1 }}>
-      <InputLabel id={`select-label-${filiereId}`}>Eléments de modules de {filNom}</InputLabel>
+      <InputLabel id={`select-label-${filiereId}`}>Units for {filNom}</InputLabel>
       <Select
         labelId={`select-label-${filiereId}`}
         id={`select-${filiereId}`}

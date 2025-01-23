@@ -7,7 +7,7 @@ const StudentSchema = mongoose.Schema({
     cne: { type: String, required: true, unique: true },
     cin:{ type: String, required: true, unique: true },
     email: { type: String, unique: true }, // Adding the email field
-    issueDe:{ type: String, enum:['2AP','PASSERELLE','BAC','CNC'],required:true},
+    admissionCategory:{ type: String, enum:['2AP','PASSERELLE','BAC','CNC'],required:true},
     telephone: { type: Number,  unique: true },
     redoublant:{type:Boolean,default:false},
     dateDeNaissance:{ type: String},

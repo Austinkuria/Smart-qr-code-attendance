@@ -15,7 +15,7 @@ router.get('/getOne/:listeId', ListeCtrls.getListeById);
 // Mettre à jour la présence d'un étudiant dans une liste pour une séance donnée
 router.put('/upd/:seanceId/:etudiantId/presence', ListeCtrls.updatePresence);
 
-// Supprimer toutes les listes
+// Delete toutes les listes
 router.delete('/deleteAll', ListeCtrls.deleteAllListes);
 
 router.get('/absencesByFiliere', ListeCtrls.getAbsencesByFiliere);

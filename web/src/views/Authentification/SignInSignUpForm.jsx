@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-
 const SignInSignUpForm = () => {
   const [emailValue, setEmailValue] = useState('');
   const [passwordValue, setPasswordValue] = useState('');
@@ -24,9 +23,9 @@ const SignInSignUpForm = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-      // Log the values of email and password to verify what's being sent
-  console.log('Email:', emailValue);
-  console.log('Password:', passwordValue)
+    console.log('Email:', emailValue);
+    console.log('Password:', passwordValue);
+
     try {
       const response = await fetch('http://localhost:3001/api1/v1/auth/login', {
         method: 'POST',
@@ -38,54 +37,48 @@ const SignInSignUpForm = () => {
           password: passwordValue,
         }),
       });
-    
+
       const data = await response.json();
-    
+
       if (!response.ok) {
         if (response.status === 401) {
-          throw new Error('Email or password incorrect');
+          throw new Error('Incorrect email or password');
         } else {
           throw new Error('Login failed');
         }
       }
-    
+
       const { userId, userRole, token, isFirstLogin, nom, profId } = data;
-    
+
       localStorage.setItem('ISFIRST', isFirstLogin);
       localStorage.setItem('USERNOM', nom);
       localStorage.setItem('USER_ID', userId);
 
-
-    
       if (!isFirstLogin) {
         localStorage.setItem('TOKEN', token);
         localStorage.setItem('USER_ROLE', userRole);
         localStorage.setItem('PROFID', profId);
       }
-    
+
       // Redirect based on user role
       if (isFirstLogin) {
         navigate(`/update-password/${nom}`);
       } else if (userRole === 'admin') {
         navigate('/admin');
-      } else if (userRole === 'Professeurs') {
+      } else if (userRole === 'Lecturer') {
         navigate('/seances');
       } else {
         navigate('/');
       }
-    
-      // Refresh the page
     } catch (error) {
       console.error('Login Error:', error);
-    
-      // Set error message based on the error type
-      if (error.message === 'Email or password incorrect') {
-        setError('Email ou mot de passe incorrect');
+
+      if (error.message === 'Incorrect email or password') {
+        setError('Incorrect email or password');
       } else {
-        setError('Une erreur s\'est produite lors de la connexion');
+        setError('An error occurred during login');
       }
-    
-      // Fade out error message after 3 seconds
+
       setTimeout(() => {
         setError('');
       }, 3000);
@@ -99,10 +92,10 @@ const SignInSignUpForm = () => {
           <div className="row gx-lg-5 align-items-center">
             <div className="col-lg-6 mb-5 mb-lg-0">
               <h1 className="my-2 display-3 fw-bold ls-tight text-primary" style={{ marginTop: '-20px' }}>
-                Bienvenue <br />
+                Welcome <br />
               </h1>
               <span className="text" style={{ color: 'Black', fontSize: '1.2rem' }}>
-                Bonjour, vous devez vous identifier pour accéder à votre compte
+                Please log in to access your account
               </span>
             </div>
 
@@ -125,7 +118,7 @@ const SignInSignUpForm = () => {
                         type={showPassword ? 'text' : 'password'}
                         id="form3Example4"
                         className="form-control"
-                        placeholder="Mot de passe"
+                        placeholder="Password"
                         value={passwordValue}
                         onChange={handlePasswordChange}
                       />
@@ -160,22 +153,20 @@ const SignInSignUpForm = () => {
                       >
                         {error}
                       </div>
-                    )} <br />
+                    )}
+                    <br />
 
-<div className="form-check mb-4">
-  <a href="#" className="form-check-link">
-    Mot de passe oublié ?
-  </a>
-</div>
-
+                    <div className="form-check mb-4">
+                      <a href="#forgot-password" className="form-check-link">
+                        Forgot password?
+                      </a>
+                    </div>
 
                     <div className="text-center">
                       <button type="submit" data-mdb-button-init data-mdb-ripple-init className="btn btn-primary btn-block mb-4">
-                        S`identifier
+                        Log In
                       </button>
                     </div>
-
-                    
                   </form>
                 </div>
               </div>

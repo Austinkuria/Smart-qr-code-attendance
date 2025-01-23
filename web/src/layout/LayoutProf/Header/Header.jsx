@@ -89,7 +89,7 @@ const Header = () => {
         <div className="row align-items-center">
           <div className="col-6 col-lg-2">
             <h1 className="mb-0 site-logo">
-              <Link to="/" className={`mb-0 ${isBottom ? 'black-title' : ''}`}>AbesSystem</Link>
+              <Link to="/" className={`mb-0 ${isBottom ? 'black-title' : ''}`}>Smart QR Code Student Attendance System</Link>
             </h1>
           </div>
           <div className="col-12 col-md-10 d-none d-lg-block">
@@ -97,9 +97,9 @@ const Header = () => {
               <ul className=" site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
                 {!isProf && (
                   <>
-                    <li><a href="#propre" className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>à propos de</a></li>
+                    <li><a href="#about" className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>About</a></li>
                     <li><a href="#services" className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>Services</a></li>
-                    <li><Link to="/login" className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>Connexion</Link></li>
+                    <li><Link to="/login" className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>Login</Link></li>
                   </>
                 )}
                 {isProf && (
@@ -112,7 +112,6 @@ const Header = () => {
                       >
                         Filière <i className="icofont icofont-arrow-down" style={{ marginRight: '5px' }}></i>
                       </button>
-                 
                     </li>
                     <li><Link to={`/profil/${userID}`} className="nav-link" style={{ color: isBottom ? 'black' : 'white' }}>Profile</Link></li>
                     <li>
@@ -121,7 +120,7 @@ const Header = () => {
                         className="nav-link"
                         style={{ color: isBottom ? 'black' : 'white', background: 'none', border: 'none', cursor: 'pointer' }}
                       >
-                        déconnexion
+                        Logout
                       </button>
                     </li>
                   </>
